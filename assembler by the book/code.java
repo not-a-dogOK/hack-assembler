@@ -1,5 +1,5 @@
 public class code {
-    //get asm sybles to thier binary representations 
+    //get asm symbols to thier binary representations 
     public String dest(String dest) {
         
         switch (dest) {
@@ -45,7 +45,7 @@ public class code {
 
             case "!D":
 
-                return "001101";
+                return "0001101";
             case "!A":
 
                 return "0110001";
@@ -54,22 +54,22 @@ public class code {
                 return "1110001";
             case "-D":
 
-                return "001111";
+                return "0001111";
             case "-A":
 
-                return "110011";
+                return "0110011";
             case "-M":
 
-                return "110011";
+                return "1110011";
             case "D+1":
 
-                return "011111";
+                return "0011111";
             case "A+1":
 
-                return "110111";
+                return "0110111";
             case "M+1":
 
-                return "110111";
+                return "1110111";
             case "D-1":
 
                 return "0001110";
