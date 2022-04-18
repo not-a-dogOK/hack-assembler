@@ -61,7 +61,6 @@ public class parser {
 
     public String symbol() throws IOException {
         String line = readline(lineindex);
-        String newLine = "";
         for (int i = 0; i < line.length(); i++) {
 
             if (instactionType() == "L") {
@@ -77,24 +76,26 @@ public class parser {
         }
         return line;
     }
+
     public String dest() throws IOException {
         String line = readline(lineindex);
         int i = 0;
-        while(line.charAt(i)  ==  ' ') {
+        while (line.charAt(i) == ' ') {
             i++;
         }
         return "" + line.charAt(i);
     }
+
     public String comp() throws IOException {
         String line = readline(lineindex);
         String newLine = "";
         int i = 0;
-        while(line.charAt(i)  ==  '=') {
+        while (line.charAt(i) == '=') {
             i++;
         }
         int j = i;
         i = 0;
-        while(line.charAt(i)  ==  ';') {
+        while (line.charAt(i) == ';') {
             i++;
         }
         while (i < j) {
@@ -103,12 +104,13 @@ public class parser {
         newLine = newLine + line.charAt(j);
         return newLine;
     }
+
     public String jump() throws IOException {
         String line = readline(lineindex);
         String newLine = "";
         int i = 0;
         int j = line.length();
-        while(line.charAt(i)  ==  ';') {
+        while (line.charAt(i) == ';') {
             i++;
         }
         while (i < j) {
