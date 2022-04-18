@@ -2,19 +2,19 @@ import java.io.*;
 import java.util.Scanner;
 
 public class parser {
-    BufferedReader bufferedReader = null;
-    public int lineindex;
+    public static BufferedReader bufferedReader = null;
+    public static int lineindex;
     // constractior 
     // read the file line by line
     public parser() throws FileNotFoundException {
-
+        System.out.println("name?");
         Scanner reader = new Scanner(System.in);
         String fileName = reader.nextLine();
         FileReader fileReader = new FileReader(fileName);
         bufferedReader = new BufferedReader(fileReader);
     }
 
-    public String readline(int num) throws IOException {
+    public static String readline(int num) throws IOException {
         String line = "";
         for (int i = 0; i < num; i++) {
             line = bufferedReader.readLine();
@@ -24,14 +24,14 @@ public class parser {
 
     }
 
-    public boolean hasMoreLines() throws IOException {
+    public static boolean hasMoreLines() throws IOException {
         if (bufferedReader.readLine() != null) {
             return true;
         }
         return false;
     }
 
-    public void advance() throws IOException {
+    public static void advance() throws IOException {
         if (hasMoreLines()) {
             String line = readline(lineindex);
             for (int i = 0; i < line.length(); i++) {
@@ -42,7 +42,7 @@ public class parser {
         }
     }
 
-    public String instactionType() throws IOException {
+    public static String instactionType() throws IOException {
         String line = readline(lineindex);
         for (int j = 0; j < line.length(); j++) {
             if (line.charAt(j) == '(') {
@@ -60,7 +60,7 @@ public class parser {
 
     }
 
-    public String symbol() throws IOException {
+    public static String symbol() throws IOException {
         String line = readline(lineindex);
         for (int i = 0; i < line.length(); i++) {
 
@@ -78,7 +78,7 @@ public class parser {
         return line;
     }
 
-    public String dest() throws IOException {
+    public static String dest() throws IOException {
         String line = readline(lineindex);
         String newLine = "";
         int i = 0;
@@ -95,7 +95,7 @@ public class parser {
         return newLine;
     }
 
-    public String comp() throws IOException {
+    public static String comp() throws IOException {
         String line = readline(lineindex);
         String newLine = "";
         int i = 0;
