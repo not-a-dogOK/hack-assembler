@@ -4,7 +4,8 @@ import java.util.Scanner;
 public class parser {
     BufferedReader bufferedReader = null;
     public int lineindex;
-
+    // constractior 
+    // read the file line by line
     public parser() throws FileNotFoundException {
 
         Scanner reader = new Scanner(System.in);

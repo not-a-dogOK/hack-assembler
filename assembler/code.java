@@ -1,5 +1,7 @@
 public class code {
+    //get asm sybles to thier binary representations 
     public String dest(String dest) {
+        
         switch (dest) {
             case "M":
                 return "001";
