@@ -64,12 +64,12 @@ public class parser {
         for (int i = 0; i < line.length(); i++) {
 
             if (instactionType() == "L") {
-                if(line.charAt(i) != '(' || line.charAt(i) != ')') {
+                if (line.charAt(i) != '(' || line.charAt(i) != ')') {
                     line = line.substring(0, i) + line.substring(i + 1);
                 }
             }
             if (instactionType() == "A") {
-                if(line.charAt(i) != '@') {
+                if (line.charAt(i) != '@') {
                     line = line.substring(0, i) + line.substring(i + 1);
                 }
             }
