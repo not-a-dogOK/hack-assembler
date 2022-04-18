@@ -1,4 +1,7 @@
 import java.io.IOException;
+import java.util.Scanner;
+import java.io.FileWriter;
+import java.io.File;
 
 /**
  * main
@@ -14,12 +17,33 @@ public class main {
         }
         Table.addEntry(16394, "SCREEN");
         Table.addEntry(24576, "KBD");
+        int x = 16;
+        while (parser.hasMoreLines()) {
+            if ((parser.instactionType() == "A" || parser.instactionType() == "L")
+                    && !Table.contains(parser.symbol())) {
+                Table.addEntry(x, parser.symbol());
+                x++;
+            }
+            parser.advance();
 
-        while (parser.hasMoreLines()) 
-        {
-            if((parser.instactionType() == "A" || parser.instactionType() == "L") && !Table.contains(parser.symbol())) {
-                addEntry(parser.symbol());
-            } 
+        }
+        try {
+            System.out.println("name?");
+            Scanner reader = new Scanner(System.in);
+            String name = reader.nextLine();
+            File putputFile = new File(name);
+            if (putputFile.createNewFile()) {
+                System.out.println("File created: " + putputFile.getName());
+            } else {
+                System.out.println("File already exists.");
+            }
+            FileWriter myWriter = new FileWriter(name + ".txt");
+            myWriter.write(); //TO DO: write there 
+            myWriter.close();
+            System.out.println("Successfully wrote to the file.");
+        } catch (IOException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
         }
     }
 }

@@ -14,7 +14,7 @@ public class SymbolTable {
         }
         
     }
-
+    // WTF? ?
     public void addEntry(int valuein, String symbolIn) {
         for (int i = 0; i < value.length; i++) {
             if (value[i] == valuein && symbol[i] == "null") {
@@ -22,7 +22,8 @@ public class SymbolTable {
             }
         }
     }
-
+    //in: symbol 
+    //out if its in the table
     public boolean contains(String symbolIn) {
         for (int i = 0; i < symbol.length; i++) {
             if (symbol[i] == symbolIn) {
@@ -32,6 +33,7 @@ public class SymbolTable {
         return false;
 
     }
+    //returns the address of symbol
     public int getAdress(String symbolIn) {
         for (int i = 0; i < symbol.length; i++) {
             if(symbolIn == symbol[i])
@@ -39,4 +41,5 @@ public class SymbolTable {
         }
         return -1;
     }
+
 }

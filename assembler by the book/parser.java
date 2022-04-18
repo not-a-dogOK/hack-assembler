@@ -35,7 +35,7 @@ public class parser {
         if (hasMoreLines()) {
             String line = readline(lineindex);
             for (int i = 0; i < line.length(); i++) {
-                if (line.charAt(i + 1) == line.charAt(i) && line.charAt(i) == '/') {
+                if (line.charAt(i + 1) == line.charAt(i) && line.charAt(i) == '/') { //remove comment
                     lineindex++;
                 }
             }
