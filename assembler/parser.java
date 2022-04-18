@@ -79,11 +79,19 @@ public class parser {
 
     public String dest() throws IOException {
         String line = readline(lineindex);
+        String newLine = "";
         int i = 0;
+        int j = 0;
         while (line.charAt(i) == ' ') {
             i++;
         }
-        return "" + line.charAt(i);
+        while (line.charAt(j) == '=') {
+            j++;
+        }
+        while (i > j) {
+            newLine = newLine + line.charAt(i);
+        }
+        return newLine;
     }
 
     public String comp() throws IOException {
