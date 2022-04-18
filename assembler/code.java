@@ -72,7 +72,7 @@ public class code {
                 return "110111";
             case "D-1":
 
-                return "001110";
+                return "0001110";
             case "A-1":
 
                 return "0110010";
