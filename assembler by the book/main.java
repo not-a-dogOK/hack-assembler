@@ -18,16 +18,20 @@ public class main {
         Table.addEntry(16394, "SCREEN");
         Table.addEntry(24576, "KBD");
         int x = 16;
+        String line;
         while (parser.hasMoreLines()) {
-            if ((parser.instactionType() == "A" || parser.instactionType() == "L")
-                    && !Table.contains(parser.symbol())) {
-                Table.addEntry(x, parser.symbol());
+            
+            if ((parser.instactionType() == "A" || parser.instactionType() == "L") //adds to all symbols to table
+                && !Table.contains(line) ) {
+                line = parser.symbol();
+                Table.addEntry(x, line);
                 x++;
+                parser.advance();
             }
-            parser.advance();
+            
 
         }
-        try {
+        try { //try?
             System.out.println("name?");
             Scanner reader = new Scanner(System.in);
             String name = reader.nextLine();
@@ -41,7 +45,7 @@ public class main {
             myWriter.write(); //TO DO: write there 
             myWriter.close();
             System.out.println("Successfully wrote to the file.");
-        } catch (IOException e) {
+        } catch (IOException e) { // if eror 
             System.out.println("An error occurred.");
             e.printStackTrace();
         }

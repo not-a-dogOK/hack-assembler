@@ -30,7 +30,7 @@ public class parser {
         }
         return false;
     }
-
+    // advance the line reading in one line
     public static void advance() throws IOException {
         if (hasMoreLines()) {
             String line = readline(lineindex);
@@ -41,7 +41,7 @@ public class parser {
             }
         }
     }
-
+    // returns the istra in one letter A C or L
     public static String instactionType() throws IOException {
         String line = readline(lineindex);
         for (int j = 0; j < line.length(); j++) {
@@ -59,7 +59,7 @@ public class parser {
         return null;
 
     }
-
+    //removes the '@', '(' and  ')' making the line clean for the code translator 
     public static String symbol() throws IOException {
         String line = readline(lineindex);
         for (int i = 0; i < line.length(); i++) {
@@ -77,7 +77,7 @@ public class parser {
         }
         return line;
     }
-
+    // return a String with dest Keyword 
     public static String dest() throws IOException {
         String line = readline(lineindex);
         String newLine = "";
@@ -94,7 +94,7 @@ public class parser {
         }
         return newLine;
     }
-
+    //return a String with comp Keywords
     public static String comp() throws IOException {
         String line = readline(lineindex);
         String newLine = "";
@@ -113,7 +113,7 @@ public class parser {
         newLine = newLine + line.charAt(j);
         return newLine;
     }
-
+     //return a String with jump Keyword
     public String jump() throws IOException {
         String line = readline(lineindex);
         String newLine = "";
