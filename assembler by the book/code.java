@@ -1,6 +1,6 @@
-public class code {
+public class Code {
     //get asm symbols to thier binary representations 
-    public String dest(String dest) {
+    public static String dest(String dest) {
         
         switch (dest) {
             case "M":
@@ -22,7 +22,7 @@ public class code {
         }
     }
 
-    public String comp(String comp) {
+    public static String comp(String comp) {
         switch (comp) {
             case "0":
 
@@ -122,7 +122,7 @@ public class code {
         }
     }
 
-    public String jump(String jump) {
+    public static String jump(String jump) {
         switch (jump) {
             case "":
 

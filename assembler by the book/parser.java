@@ -6,7 +6,7 @@ public class parser {
     public static int lineindex;
     // constractior 
     // read the file line by line
-    public parser() throws FileNotFoundException {
+    public static void ReadFile() throws FileNotFoundException { // void cus the file is static
         System.out.println("name?");
         Scanner reader = new Scanner(System.in);
         String fileName = reader.nextLine();
@@ -25,10 +25,7 @@ public class parser {
     }
 
     public static boolean hasMoreLines() throws IOException {
-        if (bufferedReader.readLine() != null) {
-            return true;
-        }
-        return false;
+        return bufferedReader.readLine() != null;
     }
     // advance the line reading in one line
     public static void advance() throws IOException {
@@ -64,12 +61,12 @@ public class parser {
         String line = readline(lineindex);
         for (int i = 0; i < line.length(); i++) {
 
-            if (instactionType() == "L") {
+            if ("L".equals(instactionType())) {
                 if (line.charAt(i) != '(' || line.charAt(i) != ')') {
                     line = line.substring(0, i) + line.substring(i + 1);
                 }
             }
-            if (instactionType() == "A") {
+            if ("A".equals(instactionType())) {
                 if (line.charAt(i) != '@') {
                     line = line.substring(0, i) + line.substring(i + 1);
                 }
@@ -79,7 +76,7 @@ public class parser {
     }
     // return a String with dest Keyword 
     public static String dest() throws IOException {
-        String line = readline(lineindex);
+        String line = symbol();
         String newLine = "";
         int i = 0;
         int j = 0;
@@ -96,7 +93,7 @@ public class parser {
     }
     //return a String with comp Keywords
     public static String comp() throws IOException {
-        String line = readline(lineindex);
+        String line = symbol();
         String newLine = "";
         int i = 0;
         while (line.charAt(i) == '=') {
@@ -114,8 +111,9 @@ public class parser {
         return newLine;
     }
      //return a String with jump Keyword
-    public String jump() throws IOException {
-        String line = readline(lineindex);
+    public static String jump() throws IOException {
+        String line = symbol();
+        
         String newLine = "";
         int i = 0;
         int j = line.length();
@@ -127,5 +125,8 @@ public class parser {
         }
         newLine = newLine + line.charAt(j);
         return newLine;
+    }
+    public static void reset() {
+        lineindex = 0;
     }
 }
