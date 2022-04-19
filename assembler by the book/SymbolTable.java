@@ -26,7 +26,7 @@ public class SymbolTable {
     //out if its in the table
     public boolean contains(String symbolIn) {
         for (int i = 0; i < symbol.length; i++) {
-            if (symbol[i] == symbolIn) {
+            if (symbol[i].equals(symbolIn)) {
                 return true;
             }
         }

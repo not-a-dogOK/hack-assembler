@@ -1,7 +1,6 @@
 import java.io.IOException;
-import java.util.Scanner;
+import java.lang.reflect.Type;
 import java.io.FileWriter;
-import java.io.File;
 
 /**
  * main
@@ -10,6 +9,7 @@ public class RunMe {
 
     public static void main(String[] args) throws IOException {
         SymbolTable Table = new SymbolTable();
+        parser parser1 = new parser("first");
         for (int i = 0; i < 16; i++) {
             System.out.println(i);
             Table.addEntry(i, "R" + i);
@@ -18,50 +18,34 @@ public class RunMe {
         Table.addEntry(16394, "SCREEN");
         Table.addEntry(24576, "KBD");
         int x = 16;
-        String line = "";
-        //first pass
-        while (parser.hasMoreLines()) {
-            
-            if ((parser.instactionType().equals("A")  || parser.instactionType().equals("L") ) //adds to all symbols to table
-                && !Table.contains(line) ) {
-                line = parser.symbol();
+        String line = parser1.line;
+        String Type = "";
+        // first pass
+
+        while (line != null) {
+             Type = parser1.instactionType();
+            if ((Type.equals("A") || Type.equals("L")) // adds to all symbols to table
+                    && !Table.contains(line)) {
+                line = parser1.symbol();
                 Table.addEntry(x, line);
                 x++;
-                parser.advance();
             }
-            
 
         }
-        parser.reset();
-        line = "";
+        parser parser2 = new parser("");
+        line = parser2.readline();
         String lineBin = "";
-        //
-        try { //try?
-            System.out.println("name?");
-            Scanner reader = new Scanner(System.in);
-            String name = reader.nextLine();
-            File putputFile = new File(name);
+        try (FileWriter myWriter = new FileWriter(parser2.file.getName() + ".hack")) {
+            while (line != null) {
+                line = parser2.symbol();
+                lineBin = lineBin + Code.dest(parser2.dest());
+                lineBin = lineBin + Code.comp(parser2.comp());
+                lineBin = lineBin + Code.jump(parser2.jump());
 
-            if (putputFile.createNewFile()) {
-                System.out.println("File created: " + putputFile.getName());
-            } else {
-                System.out.println("File already exists.");
             }
-            try (FileWriter myWriter = new FileWriter(name + ".txt")) {
-                while (parser.hasMoreLines()) {
-                    line = parser.symbol();
-                    lineBin = lineBin + Code.dest(parser.dest());
-                    lineBin = lineBin + Code.comp(parser.comp());
-                    lineBin = lineBin + Code.jump(parser.jump());
-                    
-                }
-                myWriter.write(lineBin); //TO DO: write there 
-                myWriter.close();
-            }
-            System.out.println("Successfully wrote to the file.");
-        } catch (IOException e) { // if eror 
-            System.out.println("An error occurred.");
-            e.printStackTrace();
+            myWriter.write(lineBin); // TO DO: write there
+            myWriter.close();
         }
+        System.out.println("Successfully wrote to the file.");
     }
 }

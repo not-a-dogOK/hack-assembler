@@ -2,46 +2,57 @@ import java.io.*;
 import java.util.Scanner;
 
 public class parser {
-    public static BufferedReader bufferedReader = null;
-    public static int lineindex;
-    // constractior 
-    // read the file line by line
-    public static void ReadFile() throws FileNotFoundException { // void cus the file is static
-        System.out.println("name?");
-        Scanner reader = new Scanner(System.in);
-        String fileName = reader.nextLine();
-        FileReader fileReader = new FileReader(fileName);
-        bufferedReader = new BufferedReader(fileReader);
-    }
+    public String line;
+    public File file;
+    public Scanner readFile;
 
-    public static String readline(int num) throws IOException {
-        String line = "";
-        for (int i = 0; i < num; i++) {
-            line = bufferedReader.readLine();
-
-        }
-        return line;
-
-    }
-
-    public static boolean hasMoreLines() throws IOException {
-        return bufferedReader.readLine() != null;
-    }
-    // advance the line reading in one line
-    public static void advance() throws IOException {
-        if (hasMoreLines()) {
-            String line = readline(lineindex);
-            for (int i = 0; i < line.length(); i++) {
-                if (line.charAt(i + 1) == line.charAt(i) && line.charAt(i) == '/') { //remove comment
-                    lineindex++;
-                }
+    public parser(String pass) throws IOException { // reset?
+        if (pass.equals("first")) {
+            System.out.println("name? with '\' at start");
+            Scanner reader = new Scanner(System.in);
+            String fileName = System.getProperty("user.dir") + reader.nextLine() + ".asm";
+            File file = new File(fileName);
+            this.readFile = new Scanner(file);
+            if (file.exists()) {
+                System.out.println("file found!");
+                System.out.println("File name: " + file.getName());
+                System.out.println("Absolute path: " + file.getAbsolutePath());
+                System.out.println("Writeable: " + file.canWrite());
+                System.out.println("Readable " + file.canRead());
+                System.out.println("File size in bytes " + file.length());
             }
         }
+        this.line = readFile.nextLine();
+        System.out.println(this.line);
+
     }
+
+    public String readline() throws IOException {
+        String Line = readFile.nextLine();
+        if (Line != null) {
+            return Line;
+        }
+        return null;
+        
+    }
+
+    /** 
+     * public boolean hasMoreLines(int num) throws IOException {
+        return readline() != null;
+    }
+    */
+    
+
+   
+
     // returns the istra in one letter A C or L
-    public static String instactionType() throws IOException {
-        String line = readline(lineindex);
+    public String instactionType() throws IOException {
+        String line = readline();
+        System.out.println(line);
         for (int j = 0; j < line.length(); j++) {
+            if (line.charAt(j) == '/' && line.charAt(j + 1) == '/') {
+                instactionType();
+            }
             if (line.charAt(j) == '(') {
                 return "L";
             }
@@ -49,16 +60,19 @@ public class parser {
                 return "A";
             }
             if (line.charAt(j) == '=') {
+                System.out.println("C");
                 return "C";
             }
+            
 
         }
         return null;
 
     }
-    //removes the '@', '(' and  ')' making the line clean for the code translator 
-    public static String symbol() throws IOException {
-        String line = readline(lineindex);
+
+    // removes the '@', '(' and ')' making the line clean for the code translator
+    public String symbol() throws IOException {
+        String line = readline();
         for (int i = 0; i < line.length(); i++) {
 
             if ("L".equals(instactionType())) {
@@ -74,8 +88,9 @@ public class parser {
         }
         return line;
     }
-    // return a String with dest Keyword 
-    public static String dest() throws IOException {
+
+    // return a String with dest Keyword
+    public String dest() throws IOException {
         String line = symbol();
         String newLine = "";
         int i = 0;
@@ -91,8 +106,9 @@ public class parser {
         }
         return newLine;
     }
-    //return a String with comp Keywords
-    public static String comp() throws IOException {
+
+    // return a String with comp Keywords
+    public String comp() throws IOException {
         String line = symbol();
         String newLine = "";
         int i = 0;
@@ -110,10 +126,11 @@ public class parser {
         newLine = newLine + line.charAt(j);
         return newLine;
     }
-     //return a String with jump Keyword
-    public static String jump() throws IOException {
+
+    // return a String with jump Keyword
+    public String jump() throws IOException {
         String line = symbol();
-        
+
         String newLine = "";
         int i = 0;
         int j = line.length();
@@ -126,7 +143,5 @@ public class parser {
         newLine = newLine + line.charAt(j);
         return newLine;
     }
-    public static void reset() {
-        lineindex = 0;
-    }
+
 }
