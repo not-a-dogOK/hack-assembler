@@ -21,6 +21,7 @@ public class RunMe {
         String line = parser1.line;
         String Type = "";
         // first pass
+        System.out.println("first pass");
 
         while (Type != "out") {
             Type = parser1.instactionType();
@@ -30,20 +31,20 @@ public class RunMe {
                 Table.addEntry(x, line);
                 x++;
             }
-            
+
         }
-        parser parser2 = new parser(parser1.file.getName());
+        parser parser2 = new parser(" ");
         line = parser2.readline();
         String lineBin = "";
-        try (FileWriter myWriter = new FileWriter(parser2.file.getName() + ".hack")) {
-            while (line != null) {
+        try (FileWriter myWriter = new FileWriter("output.hack")) {
+            while (line != "*") {
                 line = parser2.symbol();
                 lineBin = lineBin + Code.dest(parser2.dest());
                 lineBin = lineBin + Code.comp(parser2.comp());
                 lineBin = lineBin + Code.jump(parser2.jump());
-
+                myWriter.write(lineBin); // TO DO: write there
             }
-            myWriter.write(lineBin); // TO DO: write there
+
             myWriter.close();
         }
         System.out.println("Successfully wrote to the file.");

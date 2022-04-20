@@ -2,6 +2,7 @@ import java.io.*;
 import java.util.Scanner;
 
 public class parser {
+    public static String fileName;
     public String line;
     public File file;
     public Scanner readFile;
@@ -10,8 +11,8 @@ public class parser {
         if (pass.equals("first")) {
             System.out.println("name? with '\' at start");
             Scanner reader = new Scanner(System.in);
-            String fileName = System.getProperty("user.dir") + reader.nextLine() + ".asm";
-            File file = new File(fileName);
+            fileName = System.getProperty("user.dir") + reader.nextLine() + ".asm";
+            this.file = new File(fileName);
             this.readFile = new Scanner(file);
             if (file.exists()) {
                 System.out.println("file found!");
@@ -23,7 +24,9 @@ public class parser {
             }
         }
         else {
-            this.readFile = new Scanner(file);
+        this.file = new File(fileName);
+        this.readFile = new Scanner(file);
+        
         }
         this.line = readFile.nextLine();
         System.out.println(this.line);
@@ -35,7 +38,7 @@ public class parser {
             String Line = readFile.nextLine();
             return Line;
         }
-        return "out";
+        return "*";
     }
 
     /**
@@ -47,10 +50,11 @@ public class parser {
     // returns the istra in one letter A C or L
     public String instactionType() throws IOException {
         String line = readline();
-        System.out.println(line);
-        if (line.equals("out")) {
-            return "out";
+       
+        if (line.equals("*")) {
+            return "*";
         }
+        System.out.println(line);
         for (int j = 0; j < line.length(); j++) {
             if (line.charAt(j) == '/' && line.charAt(j + 1) == '/') {
                 return "comment";
@@ -64,7 +68,6 @@ public class parser {
                 return "A";
             }
             if (line.charAt(j) == '=') {
-                //System.out.println("C");
                 return "C";
             }
         }
