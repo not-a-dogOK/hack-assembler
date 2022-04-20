@@ -22,17 +22,17 @@ public class RunMe {
         String Type = "";
         // first pass
 
-        while (line != null) {
-             Type = parser1.instactionType();
+        while (Type != "out") {
+            Type = parser1.instactionType();
             if ((Type.equals("A") || Type.equals("L")) // adds to all symbols to table
                     && !Table.contains(line)) {
                 line = parser1.symbol();
                 Table.addEntry(x, line);
                 x++;
             }
-
+            
         }
-        parser parser2 = new parser("");
+        parser parser2 = new parser(parser1.file.getName());
         line = parser2.readline();
         String lineBin = "";
         try (FileWriter myWriter = new FileWriter(parser2.file.getName() + ".hack")) {

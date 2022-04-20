@@ -22,37 +22,41 @@ public class parser {
                 System.out.println("File size in bytes " + file.length());
             }
         }
+        else {
+            this.readFile = new Scanner(file);
+        }
         this.line = readFile.nextLine();
         System.out.println(this.line);
 
     }
 
     public String readline() throws IOException {
-        String Line = readFile.nextLine();
-        if (Line != null) {
+        if (readFile.hasNextLine()) {
+            String Line = readFile.nextLine();
             return Line;
         }
-        return null;
-        
+        return "out";
     }
 
-    /** 
+    /**
      * public boolean hasMoreLines(int num) throws IOException {
-        return readline() != null;
-    }
-    */
-    
-
-   
+     * return readline() != null;
+     * }
+     */
 
     // returns the istra in one letter A C or L
     public String instactionType() throws IOException {
         String line = readline();
         System.out.println(line);
+        if (line.equals("out")) {
+            return "out";
+        }
         for (int j = 0; j < line.length(); j++) {
             if (line.charAt(j) == '/' && line.charAt(j + 1) == '/') {
-                instactionType();
+                return "comment";
             }
+        }
+        for (int j = 0; j < line.length(); j++) {
             if (line.charAt(j) == '(') {
                 return "L";
             }
@@ -60,11 +64,9 @@ public class parser {
                 return "A";
             }
             if (line.charAt(j) == '=') {
-                System.out.println("C");
+                //System.out.println("C");
                 return "C";
             }
-            
-
         }
         return null;
 
