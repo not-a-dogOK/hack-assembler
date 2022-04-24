@@ -1,65 +1,41 @@
 import java.io.*;
 import java.util.Scanner;
 
-public class parser {
-    public static String fileName;
-    public String line;
-    public File file;
-    public Scanner readFile;
+import javax.sound.sampled.Line;
 
-    public parser(String pass) throws IOException { // reset?
-        if (pass.equals("first")) {
-            System.out.println("name? with '\' at start");
-            Scanner reader = new Scanner(System.in);
-            fileName = System.getProperty("user.dir") + reader.nextLine() + ".asm";
-            this.file = new File(fileName);
-            this.readFile = new Scanner(file);
-            if (file.exists()) {
-                System.out.println("file found!");
-                System.out.println("File name: " + file.getName());
-                System.out.println("Absolute path: " + file.getAbsolutePath());
-                System.out.println("Writeable: " + file.canWrite());
-                System.out.println("Readable " + file.canRead());
-                System.out.println("File size in bytes " + file.length());
+public class parser {
+    public String fileName;
+    public File file;
+
+    public parser() throws IOException { // reset?
+
+        System.out.println("name? with '\' at start");
+        Scanner reader = new Scanner(System.in);
+        fileName = System.getProperty("user.dir") + reader.nextLine() + ".asm";
+        this.file = new File(fileName);
+        if (file.exists()) {
+            System.out.println("file found!");
+            System.out.println("File name: " + file.getName());
+            System.out.println("Absolute path: " + file.getAbsolutePath());
+            System.out.println("Writeable: " + file.canWrite());
+            System.out.println("Readable " + file.canRead());
+            System.out.println("File size in bytes " + file.length());
+        }
+
+    }
+
+    public boolean isComment(String line) {
+        for (int j = 0; j < line.length() - 1; j++) {
+            if (line.charAt(j) == '/' && line.charAt(j + 1) == '/') {
+                return true;
             }
         }
-        else {
-        this.file = new File(fileName);
-        this.readFile = new Scanner(file);
-        
-        }
-        this.line = readFile.nextLine();
-        System.out.println(this.line);
-
+        return false;
     }
-
-    public String readline() throws IOException {
-        if (readFile.hasNextLine()) {
-            String Line = readFile.nextLine();
-            return Line;
-        }
-        return "*";
-    }
-
-    /**
-     * public boolean hasMoreLines(int num) throws IOException {
-     * return readline() != null;
-     * }
-     */
 
     // returns the istra in one letter A C or L
-    public String instactionType() throws IOException {
-        String line = readline();
-       
-        if (line.equals("*")) {
-            return "*";
-        }
-        System.out.println(line);
-        for (int j = 0; j < line.length(); j++) {
-            if (line.charAt(j) == '/' && line.charAt(j + 1) == '/') {
-                return "comment";
-            }
-        }
+    public String instactionType(String line) throws IOException {
+
         for (int j = 0; j < line.length(); j++) {
             if (line.charAt(j) == '(') {
                 return "L";
@@ -76,18 +52,18 @@ public class parser {
     }
 
     // removes the '@', '(' and ')' making the line clean for the code translator
-    public String symbol() throws IOException {
-        String line = readline();
+    public String symbol(String line) throws IOException {
+        //
         for (int i = 0; i < line.length(); i++) {
 
-            if ("L".equals(instactionType())) {
-                if (line.charAt(i) != '(' || line.charAt(i) != ')') {
-                    line = line.substring(0, i) + line.substring(i + 1);
+            if ("L".equals(instactionType(line))) {
+                if (line.charAt(i) == '(') { // TO DO: cry about L here
+                    line = line.substring(i + 1);
                 }
             }
-            if ("A".equals(instactionType())) {
-                if (line.charAt(i) != '@') {
-                    line = line.substring(0, i) + line.substring(i + 1);
+            if ("A".equals(instactionType(line))) {
+                if (line.charAt(i) == '@') {
+                    line = line.substring(i + 1);
                 }
             }
         }
@@ -95,8 +71,8 @@ public class parser {
     }
 
     // return a String with dest Keyword
-    public String dest() throws IOException {
-        String line = symbol();
+    public String dest(String line) throws IOException {
+        line = symbol(line);
         String newLine = "";
         int i = 0;
         int j = 0;
@@ -106,15 +82,16 @@ public class parser {
         while (line.charAt(j) == '=') {
             j++;
         }
-        while (i > j) {
+        while (i < j) {
             newLine = newLine + line.charAt(i);
+            i++;
         }
         return newLine;
     }
 
     // return a String with comp Keywords
-    public String comp() throws IOException {
-        String line = symbol();
+    public String comp(String line) throws IOException {
+        line = symbol(line);
         String newLine = "";
         int i = 0;
         while (line.charAt(i) == '=') {
@@ -127,14 +104,15 @@ public class parser {
         }
         while (i < j) {
             newLine = newLine + line.charAt(i);
+            i++;
         }
         newLine = newLine + line.charAt(j);
         return newLine;
     }
 
     // return a String with jump Keyword
-    public String jump() throws IOException {
-        String line = symbol();
+    public String jump(String line) throws IOException {
+        line = symbol(line);
 
         String newLine = "";
         int i = 0;
@@ -144,9 +122,58 @@ public class parser {
         }
         while (i < j) {
             newLine = newLine + line.charAt(i);
+            i++;
         }
-        newLine = newLine + line.charAt(j);
+        newLine = newLine + line.charAt(j - 1);
         return newLine;
     }
 
+    public String tobin(String line) {
+        String l = Integer.toBinaryString(Integer.parseInt(line));
+        for (int i = 0; i < 16 - l.length(); i++) {
+            l = "0" + l;
+        }
+        return l;
+    }
+
+    public void writeline(String line) throws IOException {
+        SymbolTable Table = new SymbolTable();
+
+        for (int i = 0; i < 16; i++) {
+            // System.out.println(i);
+            Table.addEntry(i, "R" + i);
+            // System.out.println("R" + i);
+        }
+        int x = 15;
+        Table.addEntry(16394, "SCREEN");
+        Table.addEntry(24576, "KBD");
+        if (!isComment(line)) {
+            if ((instactionType(line).equals("A") || instactionType(line).equals("L")) // adds to all symbols to table
+                    && !Table.contains(line)) {
+                String templine = symbol(line);
+                Table.addEntry(x, line);
+                x++;
+            }
+
+            String lineBin = "";
+
+            BufferedWriter writer = new BufferedWriter(new FileWriter("output.hack", true));
+            if (instactionType(line).equals("A")) {
+                System.out.println(tobin(symbol(line)));
+                lineBin = tobin(symbol(line));
+            }
+
+            if (instactionType(line).equals("C")) {
+                lineBin = lineBin + Code.dest(dest(line));
+                lineBin = lineBin + Code.comp(comp(line));
+                lineBin = lineBin + Code.jump(jump(line));
+            }
+
+            writer.write(lineBin);
+            writer.newLine();
+            writer.close();
+
+            System.out.println("Successfully wrote to the file.");
+        }
+    }
 }
