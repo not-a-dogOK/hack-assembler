@@ -7,16 +7,17 @@ public class parser {
     public String fileName;
     public File file;
 
-    public parser() throws IOException { // reset?
-
+    public parser() throws IOException {
+        // the file receiving system
+        // with some information for the user
         System.out.println("name? with '\' at start");
         Scanner reader = new Scanner(System.in);
         fileName = System.getProperty("user.dir") + reader.nextLine() + ".asm";
         this.file = new File(fileName);
         if (file.exists()) {
-            System.out.println("file found!");
+            System.out.println("opening file....");
             System.out.println("File name: " + file.getName());
-            System.out.println("Absolute path: " + file.getAbsolutePath());
+            System.out.println("path: " + file.getAbsolutePath());
             System.out.println("Writeable: " + file.canWrite());
             System.out.println("Readable " + file.canRead());
             System.out.println("File size in bytes " + file.length());
@@ -24,6 +25,7 @@ public class parser {
 
     }
 
+    // checks if there are 2 '/' near each other
     public boolean isComment(String line) {
         for (int j = 0; j < line.length() - 1; j++) {
             if (line.charAt(j) == '/' && line.charAt(j + 1) == '/') {
@@ -53,11 +55,11 @@ public class parser {
 
     // removes the '@', '(' and ')' making the line clean for the code translator
     public String symbol(String line) throws IOException {
-        
+
         for (int i = 0; i < line.length(); i++) {
 
             if ("L".equals(instactionType(line))) {
-                if (line.charAt(i) == '(') { // TO DO: cry about L here
+                if (line.charAt(i) == '(') { // TO DO: L?
                     line = line.substring(i + 1);
                 }
             }
@@ -67,11 +69,12 @@ public class parser {
                 }
             }
         }
-        
+
         return line;
     }
 
-    // return a String with dest Keyword
+    // return a String with dest Keyword via finding the first leters in the line
+    // before '='
     public String dest(String line) throws IOException {
         line = symbol(line);
         String newLine = "";
@@ -82,16 +85,15 @@ public class parser {
                 return "";
             }
         }
-            
-        while (j - 1 >= 0 && (line.charAt(j - 1) == 'D' || line.charAt(j - 1) == 'A' || line.charAt(j - 1) == 'M') ) {
-            //System.out.println(line.charAt(j - 1));
+
+        while (j - 1 >= 0 && (line.charAt(j - 1) == 'D' || line.charAt(j - 1) == 'A' || line.charAt(j - 1) == 'M')) {
             newLine = newLine + line.charAt(j - 1);
-            j--;    
+            j--;
         }
         return newLine;
     }
 
-    // return a String with comp Keywords
+    // return a String with comp Keywords via Acceptg only lines with symbols of asm
     public String comp(String line) throws IOException {
         line = symbol(line);
         String newLine = "";
@@ -100,29 +102,27 @@ public class parser {
             i++;
             if (i >= line.length()) {
                 i = 0;
-                while(line.charAt(i) != ';') {
+                while (line.charAt(i) != ';') {
                     i++;
                 }
             }
         }
         i++;
-        System.out.println(line.charAt(i)); 
-        System.out.println(line.length());       
-        while ( 
-            line.charAt(i) == '0' || line.charAt(i) == '+' || line.charAt(i) == '1' || line.charAt(i) == '-' || 
-            line.charAt(i) == 'D' || line.charAt(i) == 'A' || line.charAt(i) == 'M' || line.charAt(i) == '!' ||
-            line.charAt(i) == '&' || line.charAt(i) == '|' ) {
-            //System.out.println(line.charAt(j - 1));
+        System.out.println(line.charAt(i));
+        System.out.println(line.length());
+        while (line.charAt(i) == '0' || line.charAt(i) == '+' || line.charAt(i) == '1' || line.charAt(i) == '-' ||
+                line.charAt(i) == 'D' || line.charAt(i) == 'A' || line.charAt(i) == 'M' || line.charAt(i) == '!' ||
+                line.charAt(i) == '&' || line.charAt(i) == '|') {
             newLine = newLine + line.charAt(i);
             i++;
-            if (line.length() - 1 <i) { // at end of line
+            if (line.length() - 1 < i) { // at end of line
                 return newLine;
-            }       
+            }
         }
-        return newLine;
+        return newLine; // default
     }
 
-    // return a String with jump Keyword
+    // return a String with jump Keyword via going to ';' in the line
     public String jump(String line) throws IOException {
         line = symbol(line);
 
@@ -131,11 +131,11 @@ public class parser {
         int j = line.length() - 1;
         while (line.charAt(i) != ';') {
             i++;
-            if (line.length() - 1 <i) { // at end of line
+            if (line.length() - 1 < i) { // at end of line
                 return newLine;
             }
         }
-        
+
         while (i < j) {
             newLine = newLine + line.charAt(i);
             i++;
@@ -144,27 +144,25 @@ public class parser {
         return newLine;
     }
 
+    // return a 16 bin number representing the number received
     public String tobin(String line) {
         String l = Integer.toBinaryString(Integer.parseInt(line));
-        //System.out.println(l);
-        if (l.equals("0") || l.equals("00") ) {
+        if (l.equals("0") || l.equals("00")) {
             for (int i = 0; i < 15; i++) {
                 l = "0" + l;
             }
             return l;
         }
-        //System.out.println(l.length());
         int num = l.length();
         for (int i = 0; i < 16 - num; i++) {
             l = "0" + l;
         }
-        //System.out.println(l);
         return l;
     }
 
+    // the work force of the assmbler called for every line
     public void writeline(String line) throws IOException {
         SymbolTable Table = new SymbolTable();
-
         for (int i = 0; i < 16; i++) {
             Table.addEntry(i, "R" + i);
         }
@@ -183,23 +181,20 @@ public class parser {
 
             BufferedWriter writer = new BufferedWriter(new FileWriter("output.hack", true));
             if (instactionType(line).equals("A")) {
-                //System.out.println(tobin(symbol(line)));
                 lineBin = tobin(symbol(line));
             }
 
-            if (instactionType(line).equals("C")) {
+            if (instactionType(line).equals("C")) { // build the line
                 lineBin = "111";
                 lineBin = lineBin + Code.comp(comp(line));
                 lineBin = lineBin + Code.dest(dest(line));
                 lineBin = lineBin + Code.jump(jump(line));
                 System.out.println(lineBin);
-                
+
             }
-            /**TO DO: 
-             * L in stra
-             * fix the missing bits on translate 
-             * 
-            **/
+
+            // TO DO: add L in stra
+
             writer.write(lineBin);
             writer.newLine();
             writer.close();
