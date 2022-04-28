@@ -1,7 +1,7 @@
 public class Code {
     //get asm symbols to thier binary representations 
     public static String dest(String dest) {
-        
+        System.out.println(dest);
         switch (dest) {
             case "M":
                 return "001";
@@ -18,11 +18,12 @@ public class Code {
             case "ADM":
                 return "111";
             default:
-                return "";
+                return "000";
         }
     }
 
     public static String comp(String comp) {
+        System.out.println(comp);
         switch (comp) {
             case "0":
 
@@ -123,6 +124,7 @@ public class Code {
     }
 
     public static String jump(String jump) {
+        System.out.println(jump);
         switch (jump) {
             case "":
 

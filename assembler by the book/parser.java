@@ -53,7 +53,7 @@ public class parser {
 
     // removes the '@', '(' and ')' making the line clean for the code translator
     public String symbol(String line) throws IOException {
-        //
+        
         for (int i = 0; i < line.length(); i++) {
 
             if ("L".equals(instactionType(line))) {
@@ -67,6 +67,7 @@ public class parser {
                 }
             }
         }
+        
         return line;
     }
 
@@ -74,17 +75,18 @@ public class parser {
     public String dest(String line) throws IOException {
         line = symbol(line);
         String newLine = "";
-        int i = 0;
         int j = 0;
-        while (line.charAt(i) == ' ') {
-            i++;
-        }
-        while (line.charAt(j) == '=') {
+        while (line.charAt(j) != '=') {
             j++;
+            if (j >= line.length()) {
+                return "";
+            }
         }
-        while (i < j) {
-            newLine = newLine + line.charAt(i);
-            i++;
+            
+        while (j - 1 >= 0 && (line.charAt(j - 1) == 'D' || line.charAt(j - 1) == 'A' || line.charAt(j - 1) == 'M') ) {
+            //System.out.println(line.charAt(j - 1));
+            newLine = newLine + line.charAt(j - 1);
+            j--;    
         }
         return newLine;
     }
@@ -94,19 +96,29 @@ public class parser {
         line = symbol(line);
         String newLine = "";
         int i = 0;
-        while (line.charAt(i) == '=') {
+        while (line.charAt(i) != '=') {
             i++;
+            if (i >= line.length()) {
+                i = 0;
+                while(line.charAt(i) != ';') {
+                    i++;
+                }
+            }
         }
-        int j = i;
-        i = 0;
-        while (line.charAt(i) == ';') {
-            i++;
-        }
-        while (i < j) {
+        i++;
+        System.out.println(line.charAt(i)); 
+        System.out.println(line.length());       
+        while ( 
+            line.charAt(i) == '0' || line.charAt(i) == '+' || line.charAt(i) == '1' || line.charAt(i) == '-' || 
+            line.charAt(i) == 'D' || line.charAt(i) == 'A' || line.charAt(i) == 'M' || line.charAt(i) == '!' ||
+            line.charAt(i) == '&' || line.charAt(i) == '|' ) {
+            //System.out.println(line.charAt(j - 1));
             newLine = newLine + line.charAt(i);
             i++;
+            if (line.length() - 1 <i) { // at end of line
+                return newLine;
+            }       
         }
-        newLine = newLine + line.charAt(j);
         return newLine;
     }
 
@@ -116,10 +128,14 @@ public class parser {
 
         String newLine = "";
         int i = 0;
-        int j = line.length();
-        while (line.charAt(i) == ';') {
+        int j = line.length() - 1;
+        while (line.charAt(i) != ';') {
             i++;
+            if (line.length() - 1 <i) { // at end of line
+                return newLine;
+            }
         }
+        
         while (i < j) {
             newLine = newLine + line.charAt(i);
             i++;
@@ -130,9 +146,19 @@ public class parser {
 
     public String tobin(String line) {
         String l = Integer.toBinaryString(Integer.parseInt(line));
-        for (int i = 0; i < 16 - l.length(); i++) {
+        //System.out.println(l);
+        if (l.equals("0") || l.equals("00") ) {
+            for (int i = 0; i < 15; i++) {
+                l = "0" + l;
+            }
+            return l;
+        }
+        //System.out.println(l.length());
+        int num = l.length();
+        for (int i = 0; i < 16 - num; i++) {
             l = "0" + l;
         }
+        //System.out.println(l);
         return l;
     }
 
@@ -140,9 +166,7 @@ public class parser {
         SymbolTable Table = new SymbolTable();
 
         for (int i = 0; i < 16; i++) {
-            // System.out.println(i);
             Table.addEntry(i, "R" + i);
-            // System.out.println("R" + i);
         }
         int x = 15;
         Table.addEntry(16394, "SCREEN");
@@ -159,16 +183,23 @@ public class parser {
 
             BufferedWriter writer = new BufferedWriter(new FileWriter("output.hack", true));
             if (instactionType(line).equals("A")) {
-                System.out.println(tobin(symbol(line)));
+                //System.out.println(tobin(symbol(line)));
                 lineBin = tobin(symbol(line));
             }
 
             if (instactionType(line).equals("C")) {
-                lineBin = lineBin + Code.dest(dest(line));
+                lineBin = "111";
                 lineBin = lineBin + Code.comp(comp(line));
+                lineBin = lineBin + Code.dest(dest(line));
                 lineBin = lineBin + Code.jump(jump(line));
+                System.out.println(lineBin);
+                
             }
-
+            /**TO DO: 
+             * L in stra
+             * fix the missing bits on translate 
+             * 
+            **/
             writer.write(lineBin);
             writer.newLine();
             writer.close();
