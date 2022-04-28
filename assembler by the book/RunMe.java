@@ -1,8 +1,6 @@
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.io.FileWriter;
 
 /**
  * main
@@ -11,7 +9,6 @@ public class RunMe {
 
     public static void main(String[] args) throws IOException {
         SymbolTable Table = new SymbolTable();
-        ;
         for (int i = 0; i < 16; i++) {
             //System.out.println(i);
             Table.addEntry(i, "R" + i);
