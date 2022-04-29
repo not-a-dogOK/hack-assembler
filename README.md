@@ -8,6 +8,5 @@ knows to handle A type instructions (op code 0), C type instructions (op code 1)
 
 # API 
 input: For each line Program read the line via user input
-1) First pass on the line
-2) Second pass on the line 
-output: Write it in “output.hack”
+1) First pass on the line  
+2) Second pass on the line   output: Write it in “output.hack”
