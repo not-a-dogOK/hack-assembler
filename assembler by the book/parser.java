@@ -1,8 +1,6 @@
 import java.io.*;
 import java.util.Scanner;
 
-import javax.sound.sampled.Line;
-
 public class parser {
     public String fileName;
     public File file;
@@ -37,7 +35,6 @@ public class parser {
 
     // returns the istra in one letter A C or L
     public String instactionType(String line) throws IOException {
-        // System.out.println(line);
         for (int j = 0; j < line.length(); j++) {
             if (line.charAt(j) == '(') {
                 return "L";
@@ -102,8 +99,6 @@ public class parser {
             i++;
         }
 
-        // System.out.println(line.charAt(i));
-        // System.out.println(line.length());
         if (line.charAt(i) == '=') {
             i++;
             while (line.charAt(i) == '0' || line.charAt(i) == '+' || line.charAt(i) == '1' || line.charAt(i) == '-' ||
