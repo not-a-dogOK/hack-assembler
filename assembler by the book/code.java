@@ -1,7 +1,6 @@
 public class Code {
     // get asm symbols to thier binary representations
 
-    
     public static String dest(String dest) {
         System.out.println(dest);
         switch (dest) {
@@ -144,16 +143,15 @@ public class Code {
 
                 return "100";
             case "JNE":
-                
-                return "101"; 
+
+                return "101";
             case "JLE":
-                
-                return "110"; 
+
+                return "110";
             case "JMP":
 
                 return "111";
-            
-            
+
             default:
                 return "";
         }

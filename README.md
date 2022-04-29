@@ -8,6 +8,8 @@ knows to handle A type instructions (op code 0), C type instructions (op code 1)
 
 # API
 run a line in the follwing order: 
-1) gets line.
-2) fr pass on line. 
-3) sc pass on line. 
+For each line 
+Program read the line via user input
+First pass on the line
+Second pass on the line 
+Write it in “output.hack”
