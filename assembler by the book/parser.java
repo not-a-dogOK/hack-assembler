@@ -37,7 +37,7 @@ public class parser {
 
     // returns the istra in one letter A C or L
     public String instactionType(String line) throws IOException {
-
+            //System.out.println(line);
         for (int j = 0; j < line.length(); j++) {
             if (line.charAt(j) == '(') {
                 return "L";
@@ -45,7 +45,7 @@ public class parser {
             if (line.charAt(j) == '@') {
                 return "A";
             }
-            if (line.charAt(j) == '=') {
+            if (line.charAt(j) == '=' || line.charAt(j) == ';') {
                 return "C";
             }
         }
@@ -98,25 +98,34 @@ public class parser {
         line = symbol(line);
         String newLine = "";
         int i = 0;
-        while (line.charAt(i) != '=') {
+        while (line.charAt(i) != '=' && line.charAt(i) != ';') {
             i++;
-            if (i >= line.length()) {
-                i = 0;
-                while (line.charAt(i) != ';') {
-                    i++;
+        }
+        
+        //System.out.println(line.charAt(i));
+        //System.out.println(line.length());
+        if (line.charAt(i) == '=') {
+            i++;
+            while (line.charAt(i) == '0' || line.charAt(i) == '+' || line.charAt(i) == '1' || line.charAt(i) == '-' ||
+                line.charAt(i) == 'D' || line.charAt(i) == 'A' || line.charAt(i) == 'M' || line.charAt(i) == '!' ||
+                line.charAt(i) == '&' || line.charAt(i) == '|') {
+                newLine = newLine + line.charAt(i);
+                i++;
+                if (line.length() - 1 < i) { // at end of line
+                    return newLine;
                 }
             }
         }
-        i++;
-        System.out.println(line.charAt(i));
-        System.out.println(line.length());
-        while (line.charAt(i) == '0' || line.charAt(i) == '+' || line.charAt(i) == '1' || line.charAt(i) == '-' ||
+        if (line.charAt(i) == ';') {
+            i--;
+            while (line.charAt(i) == '0' || line.charAt(i) == '+' || line.charAt(i) == '1' || line.charAt(i) == '-' ||
                 line.charAt(i) == 'D' || line.charAt(i) == 'A' || line.charAt(i) == 'M' || line.charAt(i) == '!' ||
                 line.charAt(i) == '&' || line.charAt(i) == '|') {
-            newLine = newLine + line.charAt(i);
-            i++;
-            if (line.length() - 1 < i) { // at end of line
-                return newLine;
+                newLine = newLine + line.charAt(i);
+                if (i == 0) { // at end of comp 
+                    return newLine;
+                }
+                i--;
             }
         }
         return newLine; // default
@@ -128,7 +137,6 @@ public class parser {
 
         String newLine = "";
         int i = 0;
-        int j = line.length() - 1;
         while (line.charAt(i) != ';') {
             i++;
             if (line.length() - 1 < i) { // at end of line
@@ -136,11 +144,14 @@ public class parser {
             }
         }
 
-        while (i < j) {
-            newLine = newLine + line.charAt(i);
-            i++;
-        }
-        newLine = newLine + line.charAt(j - 1);
+       while (line.length() - 1 >= i) { // at end of line
+        newLine = newLine + line.charAt(i + 1);
+        i++;
+            if (line.length() - 1 < i + 1) { // at end of line
+            return newLine;
+        }        
+       }
+       System.out.println("jump: " + newLine);
         return newLine;
     }
 
@@ -169,6 +180,7 @@ public class parser {
         int x = 15;
         Table.addEntry(16394, "SCREEN");
         Table.addEntry(24576, "KBD");
+        System.out.println("line:" + line);
         if (!isComment(line)) {
             if ((instactionType(line).equals("A") || instactionType(line).equals("L")) // adds to all symbols to table
                     && !Table.contains(line)) {
@@ -189,7 +201,7 @@ public class parser {
                 lineBin = lineBin + Code.comp(comp(line));
                 lineBin = lineBin + Code.dest(dest(line));
                 lineBin = lineBin + Code.jump(jump(line));
-                System.out.println(lineBin);
+                //System.out.println(lineBin);
 
             }
 

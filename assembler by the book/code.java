@@ -142,10 +142,18 @@ public class Code {
                 return "011";
             case "JLT":
 
-                return "101";
+                return "100";
+            case "JNE":
+                
+                return "101"; 
+            case "JLE":
+                
+                return "110"; 
             case "JMP":
 
                 return "111";
+            
+            
             default:
                 return "";
         }
