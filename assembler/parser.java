@@ -8,19 +8,7 @@ public class parser {
     public parser() throws IOException {
         // the file receiving system
         // with some information for the user
-        System.out.println("name? with '\' at start");
-        Scanner reader = new Scanner(System.in);
-        fileName = System.getProperty("user.dir") + reader.nextLine() + ".asm";
-        this.file = new File(fileName);
-        if (file.exists()) {
-            System.out.println("opening file....");
-            System.out.println("File name: " + file.getName());
-            System.out.println("path: " + file.getAbsolutePath());
-            System.out.println("Writeable: " + file.canWrite());
-            System.out.println("Readable " + file.canRead());
-            System.out.println("File size in bytes " + file.length());
-        }
-
+        fileName = "Nolable";
     }
 
     // checks if there are 2 '/' near each other
@@ -35,15 +23,24 @@ public class parser {
 
     // returns the istra in one letter A C or L
     public String instactionType(String line) throws IOException {
+        char[] num = {1,2,3,4,5,6,7,8,9,0};
         for (int j = 0; j < line.length(); j++) {
-            if (line.charAt(j) == '(') {
-                return "L";
-            }
             if (line.charAt(j) == '@') {
-                return "A";
+                for (int i = 0; i < num.length; i++) {
+                    if(line.charAt(j + 1) == num[i]) {
+                        return "A";
+                    }
+                    else{
+                        return "@L";
+                    }
+                }
+                
             }
             if (line.charAt(j) == '=' || line.charAt(j) == ';') {
                 return "C";
+            }
+            if (line.charAt(j) == '(') { 
+                return "(L)";
             }
         }
         return null;
@@ -167,22 +164,9 @@ public class parser {
     }
 
     // the work force of the assmbler called for every line
-    public void writeline(String line) throws IOException {
-        SymbolTable Table = new SymbolTable();
-        for (int i = 0; i < 16; i++) {
-            Table.addEntry(i, "R" + i);
-        }
-        int x = 15;
-        Table.addEntry(16394, "SCREEN");
-        Table.addEntry(24576, "KBD");
+    public void writeline(String line, int index) throws IOException {
         System.out.println("line:" + line);
         if (!isComment(line)) {
-            if ((instactionType(line).equals("A") || instactionType(line).equals("L")) // adds to all symbols to table
-                    && !Table.contains(line)) {
-                String templine = symbol(line);
-                Table.addEntry(x, line);
-                x++;
-            }
 
             String lineBin = "";
 
@@ -196,9 +180,13 @@ public class parser {
                 lineBin = lineBin + Code.comp(comp(line));
                 lineBin = lineBin + Code.dest(dest(line));
                 lineBin = lineBin + Code.jump(jump(line));
-                // System.out.println(lineBin);
+                // 
 
             }
+            
+            /**
+            
+             */
 
             // TO DO: add L in stra
 
@@ -208,5 +196,34 @@ public class parser {
 
             System.out.println("Successfully wrote to the file.");
         }
+    }
+    /**
+     * 
+     * checks for labels and parameters and adds them to a parameter Table (symbolTable type)
+     * them pops the line of the labels and parameters for the second pass to work 
+     */
+    public void firstpass(String line, int l, SymbolTable Table) throws IOException {
+        BufferedWriter writer = new BufferedWriter(new FileWriter("Nolable", true));
+        //writer.write(String);
+        String temp = line;
+        int tempN;
+        int x = 15;
+        if (instactionType(line).equals("(L)")) { 
+            Table.add(l, symbol(line));
+            temp = null;
+            
+         }
+         if (instactionType(line).equals("@L")) { 
+            tempN = Table.byName(symbol(line));
+            if (tempN == 0) {
+                x++;
+                Table.add(l, symbol(line));
+            }
+            temp = tobin(Integer.toString(tempN));
+         }
+         if (temp != null) {
+            writer.write(temp); //has to write something    
+         }
+         
     }
 }
