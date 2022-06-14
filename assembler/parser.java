@@ -20,7 +20,7 @@ public class parser {
         return false;
     }
 
-    // returns the istra in one letter A C or L
+    // returns the instruction type in one letter A C or L
     public String instactionType(String line) throws IOException {
         for (int j = 0; j < line.length(); j++) {
             if (line.charAt(j) == '@') {
@@ -51,7 +51,6 @@ public class parser {
             if ("(L)".equals(instactionType(line))) {
                 if (line.charAt(i) == '(') {
                     start = i + 1;
-                    // line = line.substring(i + 1);
                 }
                 if (line.charAt(i) == ')') {
                     end = i;
@@ -69,7 +68,7 @@ public class parser {
         return line;
     }
 
-    // return a String with dest Keyword via finding the first leters in the line
+    // return a String with dest Keyword via finding the first letters in the line
     // before '='
     public String dest(String line) throws IOException {
         line = symbol(line);
@@ -89,7 +88,7 @@ public class parser {
         return newLine;
     }
 
-    // return a String with comp Keywords via Acceptg only lines with symbols of asm
+    // return a String with comp Keywords via Accepting only lines with symbols of asm
     public String comp(String line) throws IOException {
         line = symbol(line);
         String newLine = "";
@@ -165,14 +164,10 @@ public class parser {
         return l;
     }
 
-    /**
-     * TO-DO:
-     * write line dosent work anymore.
-     * when the (L) is before @L the translation to lines is off by 1 (-1)
-     **/
+    
 
     // the work force of the assmbler called for every line
-    public void writeline(String line, int index) throws IOException {
+    public void writeline(String line) throws IOException {
         System.out.println("line:" + line);
         if (!isComment(line)) {
 

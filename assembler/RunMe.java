@@ -1,10 +1,8 @@
 import java.io.IOException;
 import java.util.Scanner;
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
-import java.io.FileWriter;
 
 public class RunMe {
 
@@ -57,7 +55,7 @@ public class RunMe {
             reader = new BufferedReader(new FileReader(parser.fileName));
             String line2 = reader.readLine();
             while (line2 != null) {
-                parser.writeline(line2, L);
+                parser.writeline(line2);
                 line2 = reader.readLine();
                 L++;
             }
