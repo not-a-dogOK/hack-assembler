@@ -207,10 +207,9 @@ public class parser {
      */
 
     public void firstPass(String line, int l, SymbolTable Table, String FileName) throws IOException {
-        
-        //System.out.println(instactionType("// goto output_d"));
-        //System.out.println("-");
-        
+
+        // System.out.println(instactionType("// goto output_d"));
+        // System.out.println("-");
 
         BufferedWriter writer = new BufferedWriter(new FileWriter("Nolable.asm", true));
         String temp = line;
@@ -234,19 +233,19 @@ public class parser {
                 }
                 temp = "@" + Integer.toString(tempN);
             }
-        
-        if (temp != null) {
-            writer.write(temp); // has to write something
-            System.out.println("Successfully wrote to the file.");
-            // if not label skip line
-            if (!instactionType(line).equals("(L)")) {
-                writer.newLine();
 
+            if (temp != null) {
+                writer.write(temp); // has to write something
+                System.out.println("Successfully wrote to the file.");
+                // if not label skip line
+                if (!instactionType(line).equals("(L)")) {
+                    writer.newLine();
+
+                }
+
+                writer.close();
             }
-
-            writer.close();
         }
-    }
     }
 
     // input: name of label needed to find

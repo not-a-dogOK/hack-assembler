@@ -9,6 +9,6 @@ knows to handle A type instructions (op code 0), C type instructions (op code 1)
 
 # API 
 input: program get file via user input
-1) First pass on the on the file, removimng labels and genrating "nolabel.asm" 
-2) Second pass on the line, reads "nolabel.asm" and write binary code into “output.hack” 
+1) First pass on the on the file, removing labels and generating "Nolable.asm" 
+2) Second pass on the line, reads "Nolable.asm" and write binary code into “output.hack” 
  <br /> output: “output.hack” 16 bit binary code for the hack computer, ready to run
