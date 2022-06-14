@@ -18,11 +18,12 @@ public class RunMe {
         for (int i = 0; i < 16; i++) {
             Table.add(i, "R" + i);
         }
-        
+
         Table.add(16394, "SCREEN");
         Table.add(24576, "KBD");
         parser parser = new parser();
 
+        BufferedReader readerOne;
         BufferedReader reader;
         String fileName;
         System.out.println("name? with '\' at start");
@@ -39,14 +40,13 @@ public class RunMe {
         }
         int L = 0; // L of line
         try {
-            reader = new BufferedReader(new FileReader(fileName));
-            String line = reader.readLine();
+            readerOne = new BufferedReader(new FileReader(fileName));
+            String line = readerOne.readLine();
             while (line != null) {
-                parser.firstpass(line, L, Table);
-                line = reader.readLine();
+                parser.firstPass(line, L, Table, fileName);
+                line = readerOne.readLine();
                 L++;
             }
-            reader.close();
         } catch (IOException e1) {
             e1.printStackTrace();
         }
@@ -66,4 +66,18 @@ public class RunMe {
             e2.printStackTrace();
         }
     }
+    /**
+     * public int labelFind(String symbol) {
+     * BufferedReader tempRead;
+     * int LT = 0;
+     * tempRead = new BufferedReader(new FileReader(fileName));
+     * String line = tempRead.readLine();
+     * while (line != null) {
+     * labelFind
+     * line = tempRead.readLine();
+     * LT++;
+     * }
+     * }
+     */
+
 }

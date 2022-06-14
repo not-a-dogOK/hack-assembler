@@ -1,5 +1,4 @@
 import java.io.*;
-import java.util.Scanner;
 
 public class parser {
     public String fileName;
@@ -8,7 +7,7 @@ public class parser {
     public parser() throws IOException {
         // the file receiving system
         // with some information for the user
-        fileName = "Nolable";
+        fileName = "Nolable.asm";
     }
 
     // checks if there are 2 '/' near each other
@@ -23,23 +22,19 @@ public class parser {
 
     // returns the istra in one letter A C or L
     public String instactionType(String line) throws IOException {
-        char[] num = {1,2,3,4,5,6,7,8,9,0};
         for (int j = 0; j < line.length(); j++) {
             if (line.charAt(j) == '@') {
-                for (int i = 0; i < num.length; i++) {
-                    if(line.charAt(j + 1) == num[i]) {
-                        return "A";
-                    }
-                    else{
-                        return "@L";
-                    }
+                if (Character.isDigit(line.charAt(j + 1))) {
+                    return "A";
                 }
-                
+
+                return "@L";
+
             }
             if (line.charAt(j) == '=' || line.charAt(j) == ';') {
                 return "C";
             }
-            if (line.charAt(j) == '(') { 
+            if (line.charAt(j) == '(') {
                 return "(L)";
             }
         }
@@ -49,15 +44,22 @@ public class parser {
 
     // removes the '@', '(' and ')' making the line clean for the code translator
     public String symbol(String line) throws IOException {
-
+        int start = 0;
+        int end;
         for (int i = 0; i < line.length(); i++) {
 
-            if ("L".equals(instactionType(line))) {
-                if (line.charAt(i) == '(') { // TO DO: L?
-                    line = line.substring(i + 1);
+            if ("(L)".equals(instactionType(line))) {
+                if (line.charAt(i) == '(') {
+                    start = i + 1;
+                    // line = line.substring(i + 1);
+                }
+                if (line.charAt(i) == ')') {
+                    end = i;
+                    line = line.substring(start, end);
                 }
             }
-            if ("A".equals(instactionType(line))) {
+            if ("A".equals(instactionType(line)) ||
+                    ("@L".equals(instactionType(line)))) {
                 if (line.charAt(i) == '@') {
                     line = line.substring(i + 1);
                 }
@@ -163,6 +165,12 @@ public class parser {
         return l;
     }
 
+    /**
+     * TO-DO:
+     * write line dosent work anymore.
+     * when the (L) is before @L the translation to lines is off by 1 (-1)
+     **/
+
     // the work force of the assmbler called for every line
     public void writeline(String line, int index) throws IOException {
         System.out.println("line:" + line);
@@ -170,7 +178,7 @@ public class parser {
 
             String lineBin = "";
 
-            BufferedWriter writer = new BufferedWriter(new FileWriter("output.hack", true));
+            BufferedWriter writer1 = new BufferedWriter(new FileWriter("output.hack", true));
             if (instactionType(line).equals("A")) {
                 lineBin = tobin(symbol(line));
             }
@@ -180,50 +188,95 @@ public class parser {
                 lineBin = lineBin + Code.comp(comp(line));
                 lineBin = lineBin + Code.dest(dest(line));
                 lineBin = lineBin + Code.jump(jump(line));
-                // 
+                //
 
             }
-            
-            /**
-            
-             */
 
-            // TO DO: add L in stra
-
-            writer.write(lineBin);
-            writer.newLine();
-            writer.close();
+            writer1.write(lineBin);
+            writer1.newLine();
+            writer1.close();
 
             System.out.println("Successfully wrote to the file.");
         }
     }
+
     /**
-     * 
-     * checks for labels and parameters and adds them to a parameter Table (symbolTable type)
-     * them pops the line of the labels and parameters for the second pass to work 
+     * checks for labels and parameters and adds them to a parameter Table
+     * (symbolTable type)
+     * them pops the line of the labels and parameters for the second pass to work
      */
-    public void firstpass(String line, int l, SymbolTable Table) throws IOException {
-        BufferedWriter writer = new BufferedWriter(new FileWriter("Nolable", true));
-        //writer.write(String);
+
+    public void firstPass(String line, int l, SymbolTable Table, String FileName) throws IOException {
+        
+        //System.out.println(instactionType("// goto output_d"));
+        //System.out.println("-");
+        
+
+        BufferedWriter writer = new BufferedWriter(new FileWriter("Nolable.asm", true));
         String temp = line;
-        int tempN;
+        int tempN = -1;
         int x = 15;
-        if (instactionType(line).equals("(L)")) { 
-            Table.add(l, symbol(line));
-            temp = null;
-            
-         }
-         if (instactionType(line).equals("@L")) { 
-            tempN = Table.byName(symbol(line));
-            if (tempN == 0) {
-                x++;
-                Table.add(l, symbol(line));
+        String symbol = "";
+        if (!isComment(line)) {
+            if (instactionType(line).equals("(L)")) {
+                temp = "";
+
             }
-            temp = tobin(Integer.toString(tempN));
-         }
-         if (temp != null) {
-            writer.write(temp); //has to write something    
-         }
-         
+            if (instactionType(line).equals("@L")) {
+                symbol = symbol(line);
+
+                if (checkLabel(line, Table)) {
+                    tempN = FindLabelLine(symbol, l, Table, FileName);
+                    tempN++; // move one forward cus assembly
+                } else {
+                    // System.out.println(symbol);
+                    tempN = Table.byName(symbol);
+                }
+                temp = "@" + Integer.toString(tempN);
+            }
+        
+        if (temp != null) {
+            writer.write(temp); // has to write something
+            System.out.println("Successfully wrote to the file.");
+            // if not label skip line
+            if (!instactionType(line).equals("(L)")) {
+                writer.newLine();
+
+            }
+
+            writer.close();
+        }
+    }
+    }
+
+    // input: name of label needed to find
+    // output: line of label
+    private int FindLabelLine(String symbol, int l, SymbolTable table, String FileName) throws IOException {
+        BufferedReader tempRead;
+        int LT = 0;
+        tempRead = new BufferedReader(new FileReader(FileName));
+
+        String line = tempRead.readLine();
+        System.out.println(symbol);
+        while (line != null) {
+            System.out.println("line: " + symbol(line));
+            if (symbol(line).equals(symbol) && LT != l) {
+                return LT;
+            }
+            line = tempRead.readLine();
+            LT++;
+        }
+        System.out.println("monkey, you code has unused label");
+        return -1;
+    }
+
+    // if its is in the table
+    public boolean checkLabel(String line, SymbolTable Table) throws IOException {
+        String symbol = symbol(line);
+        int num = Table.byName(symbol);
+        if (num == -1) {
+            return true;
+        }
+        return false;
     }
 }

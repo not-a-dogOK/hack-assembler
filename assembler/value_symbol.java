@@ -3,13 +3,12 @@ public class value_symbol {
     public String symbol;
     public static int current = 0;
 
-    public value_symbol(int index,String symbol) {
+    public value_symbol(int index, String symbol) {
         // max of symbol ?
         this.value = index;
         this.symbol = symbol;
         current++;
-        
-        
+
     }
 
 }

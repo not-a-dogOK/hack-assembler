@@ -7,7 +7,7 @@ knows to handle A type instructions (op code 0), C type instructions (op code 1)
 ![image](https://user-images.githubusercontent.com/57526797/163774626-958ad445-de89-405f-b08e-f82107f19610.png)
 
 # API
-run a line in the follwing order: 
+run a line in the following order: 
 For each line 
 Program read the line via user input
 First pass on the line
