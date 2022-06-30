@@ -1,6 +1,6 @@
 # hack-assembler
 an assembler for the hack machine language
-knows to handle A type instructions (op code 0), C type instructions (op code 1) and L type instructions (lable for easier usage)
+knows to handle A type instructions (op code 0), C type instructions (op code 1) and L type instructions (labels for easier usage)
 the midterm project of "The Elements of Computing Systems" course aka "from nand to tetris" more at https://www.nand2tetris.org
   
 
