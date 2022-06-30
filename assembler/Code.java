@@ -1,5 +1,5 @@
 public class Code {
-    // get asm symbols to thier binary representations
+    // get asm symbols to their binary representations
 
     public static String dest(String dest) {
         System.out.println(dest);
@@ -125,7 +125,8 @@ public class Code {
     }
 
     public static String jump(String jump) {
-        System.out.println(jump);
+        jump = jump.replaceAll("\\s", ""); // idk
+        System.out.println();
         switch (jump) {
             case "":
 

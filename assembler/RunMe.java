@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
-import java.io.FileWriter;
 
 public class RunMe {
 
@@ -66,18 +65,4 @@ public class RunMe {
             e2.printStackTrace();
         }
     }
-    /**
-     * public int labelFind(String symbol) {
-     * BufferedReader tempRead;
-     * int LT = 0;
-     * tempRead = new BufferedReader(new FileReader(fileName));
-     * String line = tempRead.readLine();
-     * while (line != null) {
-     * labelFind
-     * line = tempRead.readLine();
-     * LT++;
-     * }
-     * }
-     */
-
 }

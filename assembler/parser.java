@@ -167,7 +167,6 @@ public class parser {
 
     /**
      * TO-DO:
-     * write line dosent work anymore.
      * when the (L) is before @L the translation to lines is off by 1 (-1)
      **/
 
@@ -208,10 +207,7 @@ public class parser {
 
     public void firstPass(String line, int l, SymbolTable Table, String FileName) throws IOException {
 
-        // System.out.println(instactionType("// goto output_d"));
-        // System.out.println("-");
-
-        BufferedWriter writer = new BufferedWriter(new FileWriter("Nolable.asm", true));
+        BufferedWriter writer = new BufferedWriter(new FileWriter("Nolable.asm", true)); // no new file ?
         String temp = line;
         int tempN = -1;
         int x = 15;
@@ -225,7 +221,7 @@ public class parser {
                 symbol = symbol(line);
 
                 if (checkLabel(line, Table)) {
-                    tempN = FindLabelLine(symbol, l, Table, FileName);
+                    tempN = FindLabelLine(symbol, Table, FileName);
                     tempN++; // move one forward cus assembly
                 } else {
                     // System.out.println(symbol);
@@ -250,20 +246,29 @@ public class parser {
 
     // input: name of label needed to find
     // output: line of label
-    private int FindLabelLine(String symbol, int l, SymbolTable table, String FileName) throws IOException {
+
+    private int FindLabelLine(String symbol, SymbolTable table, String FileName) throws IOException {
         BufferedReader tempRead;
         int LT = 0;
+        int downGrade = 1;
         tempRead = new BufferedReader(new FileReader(FileName));
 
         String line = tempRead.readLine();
         System.out.println(symbol);
         while (line != null) {
             System.out.println("line: " + symbol(line));
-            if (symbol(line).equals(symbol) && LT != l) {
-                return LT;
+            if (symbol(line).equals(symbol) && "(L)".equals(instactionType(line))) {
+                return LT - downGrade;
             }
+            if ("(L)".equals(instactionType(line))) {
+                downGrade++;
+            }
+            if (!isComment(line)) {
+                LT++;
+            }
+            System.out.println(LT);
             line = tempRead.readLine();
-            LT++;
+
         }
         System.out.println("monkey, you code has unused label");
         return -1;
