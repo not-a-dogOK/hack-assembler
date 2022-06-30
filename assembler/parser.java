@@ -20,8 +20,8 @@ public class parser {
         return false;
     }
 
-    // returns the istra in one letter A C or L
-    public String instactionType(String line) throws IOException {
+    // returns the instruction in one letter A C or L
+    public String instructionType(String line) {
         for (int j = 0; j < line.length(); j++) {
             if (line.charAt(j) == '@') {
                 if (Character.isDigit(line.charAt(j + 1))) {
@@ -48,18 +48,17 @@ public class parser {
         int end;
         for (int i = 0; i < line.length(); i++) {
 
-            if ("(L)".equals(instactionType(line))) {
+            if ("(L)".equals(instructionType(line))) {
                 if (line.charAt(i) == '(') {
                     start = i + 1;
-                    // line = line.substring(i + 1);
                 }
                 if (line.charAt(i) == ')') {
                     end = i;
                     line = line.substring(start, end);
                 }
             }
-            if ("A".equals(instactionType(line)) ||
-                    ("@L".equals(instactionType(line)))) {
+            if ("A".equals(instructionType(line)) ||
+                    ("@L".equals(instructionType(line)))) {
                 if (line.charAt(i) == '@') {
                     line = line.substring(i + 1);
                 }
@@ -69,7 +68,7 @@ public class parser {
         return line;
     }
 
-    // return a String with dest Keyword via finding the first leters in the line
+    // return a String with dest Keyword via finding the first letters in the line
     // before '='
     public String dest(String line) throws IOException {
         line = symbol(line);
@@ -89,7 +88,7 @@ public class parser {
         return newLine;
     }
 
-    // return a String with comp Keywords via Acceptg only lines with symbols of asm
+    // return a String with comp Keywords via Accepting only lines with symbols of asm
     public String comp(String line) throws IOException {
         line = symbol(line);
         String newLine = "";
@@ -145,7 +144,6 @@ public class parser {
                 return newLine;
             }
         }
-        System.out.println("jump: " + newLine);
         return newLine;
     }
 
@@ -170,19 +168,18 @@ public class parser {
      * when the (L) is before @L the translation to lines is off by 1 (-1)
      **/
 
-    // the work force of the assmbler called for every line
+    // the work force of the assembler called for every line
     public void writeline(String line, int index) throws IOException {
-        System.out.println("line:" + line);
         if (!isComment(line)) {
 
             String lineBin = "";
 
             BufferedWriter writer1 = new BufferedWriter(new FileWriter("output.hack", true));
-            if (instactionType(line).equals("A")) {
+            if (instructionType(line).equals("A")) {
                 lineBin = tobin(symbol(line));
             }
 
-            if (instactionType(line).equals("C")) { // build the line
+            if (instructionType(line).equals("C")) { // build the line
                 lineBin = "111";
                 lineBin = lineBin + Code.comp(comp(line));
                 lineBin = lineBin + Code.dest(dest(line));
@@ -195,7 +192,6 @@ public class parser {
             writer1.newLine();
             writer1.close();
 
-            System.out.println("Successfully wrote to the file.");
         }
     }
 
@@ -205,7 +201,7 @@ public class parser {
      * them pops the line of the labels and parameters for the second pass to work
      */
 
-    public void firstPass(String line, int l, SymbolTable Table, String FileName) throws IOException {
+    public void firstPass(String line, SymbolTable Table, String FileName) throws IOException {
 
         BufferedWriter writer = new BufferedWriter(new FileWriter("Nolable.asm", true)); // no new file ?
         String temp = line;
@@ -213,18 +209,17 @@ public class parser {
         int x = 15;
         String symbol = "";
         if (!isComment(line)) {
-            if (instactionType(line).equals("(L)")) {
+            if (instructionType(line).equals("(L)")) {
                 temp = "";
 
             }
-            if (instactionType(line).equals("@L")) {
+            if (instructionType(line).equals("@L")) {
                 symbol = symbol(line);
 
                 if (checkLabel(line, Table)) {
-                    tempN = FindLabelLine(symbol, Table, FileName);
+                    tempN = FindLabelLine(symbol, FileName);
                     tempN++; // move one forward cus assembly
                 } else {
-                    // System.out.println(symbol);
                     tempN = Table.byName(symbol);
                 }
                 temp = "@" + Integer.toString(tempN);
@@ -232,9 +227,8 @@ public class parser {
 
             if (temp != null) {
                 writer.write(temp); // has to write something
-                System.out.println("Successfully wrote to the file.");
                 // if not label skip line
-                if (!instactionType(line).equals("(L)")) {
+                if (!instructionType(line).equals("(L)")) {
                     writer.newLine();
 
                 }
@@ -247,30 +241,29 @@ public class parser {
     // input: name of label needed to find
     // output: line of label
 
-    private int FindLabelLine(String symbol, SymbolTable table, String FileName) throws IOException {
+    private int FindLabelLine(String symbol, String FileName) throws IOException {
         BufferedReader tempRead;
         int LT = 0;
         int downGrade = 1;
         tempRead = new BufferedReader(new FileReader(FileName));
 
         String line = tempRead.readLine();
-        System.out.println(symbol);
         while (line != null) {
-            System.out.println("line: " + symbol(line));
-            if (symbol(line).equals(symbol) && "(L)".equals(instactionType(line))) {
+            if (symbol(line).equals(symbol) && "(L)".equals(instructionType(line))) {
+                tempRead.close();
                 return LT - downGrade;
             }
-            if ("(L)".equals(instactionType(line))) {
+            if ("(L)".equals(instructionType(line))) {
                 downGrade++;
             }
             if (!isComment(line)) {
                 LT++;
             }
-            System.out.println(LT);
             line = tempRead.readLine();
 
         }
         System.out.println("monkey, you code has unused label");
+        tempRead.close();
         return -1;
     }
 
