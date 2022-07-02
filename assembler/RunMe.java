@@ -17,6 +17,7 @@ public class RunMe {
             Table.add(i, "R" + i);
         }
 
+        // TODO: doesn't recognize keyboard 
         Table.add(16394, "SCREEN");
         Table.add(24576, "KBD");
         parser parser = new parser();

@@ -163,10 +163,6 @@ public class parser {
         return l;
     }
 
-    /**
-     * TO-DO:
-     * when the (L) is before @L the translation to lines is off by 1 (-1)
-     **/
 
     // the work force of the assembler called for every line
     public void writeline(String line, int index) throws IOException {
@@ -241,10 +237,11 @@ public class parser {
     // input: name of label needed to find
     // output: line of label
 
+    
     private int FindLabelLine(String symbol, String FileName) throws IOException {
         BufferedReader tempRead;
         int LT = 0;
-        int downGrade = 1;
+        int downGrade = 0;
         tempRead = new BufferedReader(new FileReader(FileName));
 
         String line = tempRead.readLine();
@@ -252,6 +249,7 @@ public class parser {
             if (symbol(line).equals(symbol) && "(L)".equals(instructionType(line))) {
                 tempRead.close();
                 return LT - downGrade;
+                //problem when there are comments 
             }
             if ("(L)".equals(instructionType(line))) {
                 downGrade++;
