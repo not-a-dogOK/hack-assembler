@@ -20,7 +20,7 @@ public class parser {
         return false;
     }
 
-    // returns the instruction in one letter A C or L
+// returns the instruction in one letter A C or L
     public String instructionType(String line) {
         for (int j = 0; j < line.length(); j++) {
             if (line.charAt(j) == '@') {
@@ -164,8 +164,9 @@ public class parser {
     }
 
 
-    // the work force of the assembler called for every line
+    // the work force of the assembler, called for every line
     public void writeline(String line, int index) throws IOException {
+
         if (!isComment(line)) {
 
             String lineBin = "";
