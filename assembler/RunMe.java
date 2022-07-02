@@ -17,6 +17,7 @@ public class RunMe {
             Table.add(i, "R" + i);
         }
 
+        // TODO: doesn't recognize keyboard 
         Table.add(16394, "SCREEN");
         Table.add(24576, "KBD");
         parser parser = new parser();
@@ -41,7 +42,7 @@ public class RunMe {
             readerOne = new BufferedReader(new FileReader(fileName));
             String line = readerOne.readLine();
             while (line != null) {
-                parser.firstPass(line, L, Table, fileName);
+                parser.firstPass(line, Table, fileName);
                 line = readerOne.readLine();
                 L++;
             }
@@ -64,18 +65,4 @@ public class RunMe {
             e2.printStackTrace();
         }
     }
-    /**
-     * public int labelFind(String symbol) {
-     * BufferedReader tempRead;
-     * int LT = 0;
-     * tempRead = new BufferedReader(new FileReader(fileName));
-     * String line = tempRead.readLine();
-     * while (line != null) {
-     * labelFind
-     * line = tempRead.readLine();
-     * LT++;
-     * }
-     * }
-     */
-
 }

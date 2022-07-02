@@ -2,8 +2,7 @@ public class SymbolTable {
     public value_symbol[] SymbolTable;
 
     public SymbolTable() {
-        this.SymbolTable = new value_symbol[999];
-        // did i ask?
+        this.SymbolTable = new value_symbol[9999];
     }
 
     public void add(int index, String symbol) {

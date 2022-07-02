@@ -125,7 +125,8 @@ public class Code {
     }
 
     public static String jump(String jump) {
-        System.out.println(jump);
+        jump = jump.replaceAll("\\s", ""); // idk
+        System.out.println();
         switch (jump) {
             case "":
 
