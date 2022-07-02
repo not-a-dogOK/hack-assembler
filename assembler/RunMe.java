@@ -56,7 +56,7 @@ public class RunMe {
             reader = new BufferedReader(new FileReader(parser.fileName));
             String line2 = reader.readLine();
             while (line2 != null) {
-                parser.writeline(line2);
+                parser.writeline(line2, L);
                 line2 = reader.readLine();
                 L++;
             }
