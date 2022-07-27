@@ -20,7 +20,7 @@ public class parser {
         return false;
     }
 
-// returns the instruction in one letter A C or L
+    // returns the instruction in one letter A C or L
     public String instructionType(String line) {
         for (int j = 0; j < line.length(); j++) {
             if (line.charAt(j) == '@') {
@@ -88,7 +88,8 @@ public class parser {
         return newLine;
     }
 
-    // return a String with comp Keywords via Accepting only lines with symbols of asm
+    // return a String with comp Keywords via Accepting only lines with symbols of
+    // asm
     public String comp(String line) throws IOException {
         line = symbol(line);
         String newLine = "";
@@ -163,7 +164,6 @@ public class parser {
         return l;
     }
 
-
     // the work force of the assembler, called for every line
     public void writeline(String line, int index) throws IOException {
 
@@ -205,6 +205,7 @@ public class parser {
         int tempN = -1;
         int x = 15;
         String symbol = "";
+        System.out.println(line);
         if (!isComment(line)) {
             if (instructionType(line).equals("(L)")) {
                 temp = "";
@@ -238,7 +239,6 @@ public class parser {
     // input: name of label needed to find
     // output: line of label
 
-    
     private int FindLabelLine(String symbol, String FileName) throws IOException {
         BufferedReader tempRead;
         int LT = 0;
@@ -250,7 +250,7 @@ public class parser {
             if (symbol(line).equals(symbol) && "(L)".equals(instructionType(line))) {
                 tempRead.close();
                 return LT - downGrade;
-                //problem when there are comments 
+                // problem when there are comments
             }
             if ("(L)".equals(instructionType(line))) {
                 downGrade++;
